@@ -46,6 +46,7 @@ class Dataset:
             connection = json.loads(datasource.connection_details)
             server = connection.get('server')
             url = connection.get('url')
+            extension = connection.get('extensionDataSourceKind')
 
             if server: # Server-based connections (e.g. Azure Data Warehouse)
                 if server in credentials:
@@ -53,9 +54,9 @@ class Dataset:
                     cred = credentials.get(server)
                     
                     if 'token' in cred:
-                        datasource.update_credentials(token=cred['token'])
+                        datasource.update_credentials('oauth2', token=cred['token'])
                     elif 'username' in cred:
-                        datasource.update_credentials(cred['username'], cred['password'])
+                        datasource.update_credentials('basic', username=cred['username'], password=cred['password'])
                 else:
                     print(f'*** No credentials provided for {server}. Using existing credentials.')
             
@@ -66,11 +67,20 @@ class Dataset:
                     cred = credentials.get(domain)
 
                     if 'token' in cred:
-                        datasource.update_credentials(token=cred['token'])
+                        datasource.update_credentials('oauth2', token=cred['token'])
                     elif 'username' in cred:
-                        datasource.update_credentials(cred['username'], cred['password'])
+                        datasource.update_credentials('basic', username=cred['username'], password=cred['password'])
                 else:
                     print(f'*** No credentials provided for {domain}. Using existing credentials.')
+            
+            elif extension == 'Databricks':
+                cluster = connection.get('extensionDataSourcePath').get('httpPath')
+                print(f'*** Updating credentials for {cluster}')
+                cred = credentials.get(cluster)
+                if cluster in credentials:
+                    datasource.update_credentials('key', token=cred['token'])
+                else:
+                    print(f'*** No credentials provided for {cluster}. Using existing credentials.')
 
             else:
                 print(f'*** No credentials provided for {connection}. Using existing credentials.')
