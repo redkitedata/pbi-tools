@@ -44,7 +44,7 @@ class Datasource:
                 'name': 'password',
                 'value': password
             }]}
-        elif type == 'key':
+        elif type == 'Key':
             credentials = {'credentialData': [{
                 'name': 'key',
                 'value': token
