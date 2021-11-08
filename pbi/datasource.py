@@ -59,6 +59,8 @@ class Datasource:
             'useCallerAADIdentity': 'False', # required to avoid direct query connections 'expiring'
             'useEndUserOAuth2Credentials': 'False' # required to avoid direct query connections 'expiring'
         }}
+
+        print(payload)
         
         r = requests.patch(f'https://api.powerbi.com/v1.0/myorg/gateways/{self.gateway_id}/datasources/{self.id}', headers=self.dataset.workspace.tenant.token.get_headers(), json=payload)
         handle_request(r)
