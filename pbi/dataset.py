@@ -74,7 +74,8 @@ class Dataset:
                     print(f'*** No credentials provided for {domain}. Using existing credentials.')
             
             elif extension == 'Databricks':
-                cluster = connection.get('extensionDataSourcePath').get('httpPath')
+                extension_path = json.loads(connection['extensionDataSourcePath'])
+                cluster = extension_path.get('httpPath')
                 print(f'*** Updating credentials for {cluster}')
                 cred = credentials.get(cluster)
                 if cluster in credentials:
