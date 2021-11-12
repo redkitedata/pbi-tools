@@ -6,9 +6,9 @@ from .report import Report
 from .dataset import Dataset
 from .tools import handle_request, get_connection_string, rebind_report
 
-AID_WORKSPACE_NAME = 'Deployment Aid'
-AID_REPORT_NAME = 'Deployment Aid Report'
-AID_MODEL_NAME = 'Deployment Aid Model'
+#AID_WORKSPACE_NAME = 'Deployment Aid'
+#AID_REPORT_NAME = 'Deployment Aid Report'
+#AID_MODEL_NAME = 'Deployment Aid Model'
 
 def _name_builder(filepath, **kwargs):
     filename = path.basename(filepath)
@@ -203,7 +203,7 @@ class Workspace:
                 print(f'Import ERROR: {json.get("error").get("code")} ({json.get("error").get("message")})')
                 break
 
-    def refresh_datasets(self, credentials=None, wait=True):
+    def refresh_datasets(self, credentials=None, wait=True, AID_MODEL_NAME='Deployment Aid Model'):
         """Refreshes all datasets in the workspace, optionally reauthenticating using the credentials provided. Currently, only database credentials are supported using either SQL logins or oauth tokens.
 
         :param credentials: a dictionary of credentials (see examples below)
@@ -225,7 +225,7 @@ class Workspace:
         """
 
         error = False
-        datasets = [d for d in self.datasets if 'Deployment Aid' not in d.name]
+        datasets = [d for d in self.datasets if AID_MODEL_NAME not in d.name]
         
         for dataset in datasets:
             try:
@@ -262,7 +262,10 @@ class Workspace:
 
             return not error
 
-    def deploy(self, dataset_filepath, report_filepaths, dataset_params=None, credentials=None, force_refresh=False, on_report_success=None, name_builder=_name_builder, name_comparator=_name_comparator, overwrite_reports=False, **kwargs):
+    def deploy(self, dataset_filepath, report_filepaths, dataset_params=None, credentials=None, force_refresh=False, on_report_success=None,
+                name_builder=_name_builder, name_comparator=_name_comparator, overwrite_reports=False,
+                AID_WORKSPACE_NAME='Deployment Aid', AID_REPORT_NAME='Deployment Aid Report', AID_MODEL_NAME='Deployment Aid Model', **kwargs):
+
         """Publishes a single model and an collection of associated reports. Note, currently only database authentication is supported, using either SQL logins or oauth tokens.
 
         There is a requirement for a dummy report called 'Deployment Aid Report' to exist either in the publishing workspace (default) or in a separate 'config' workspace.
