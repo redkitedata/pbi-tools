@@ -64,7 +64,7 @@ class Dataset:
                         )
                 else:
                     print(
-                        f"*** No credentials provided for {server}. Using existing credentials."
+                        f"*** No credentials provided for server: {server}. Using existing credentials."
                     )
 
             elif url:  # Web-based connections (e.g. Application Insights API)
@@ -83,12 +83,12 @@ class Dataset:
                         )
                 else:
                     print(
-                        f"*** No credentials provided for {domain}. Using existing credentials."
+                        f"*** No credentials provided for URL: {domain}. Using existing credentials."
                     )
 
             else:
                 print(
-                    f"*** No credentials provided for {connection}. Using existing credentials."
+                    f"*** Credentials for this connection are not supported: {connection}. Using existing credentials."
                 )
 
     def trigger_refresh(self):
