@@ -25,7 +25,7 @@ class Datasource:
         
         Warning: If you use the oauth method, then authentiaction will only remain valid until the token expires - you may need to reauthenticate before refreshing; the token may expire before the refresh has completed in large models.
 
-        :param type: the type of authentication method to be used by the PBI service
+        :param type: the type of authentication method to be used by the PBI service: ouath2, basic or key
         :param username: username value if using SQL authentication; the ``password`` must also be provided
         :param password: password value if using SQL authentication; the ``username`` must also be provided
         :param token: valid oauth token (an alternative to passing username and password)
@@ -44,7 +44,7 @@ class Datasource:
                 'name': 'password',
                 'value': password
             }]}
-        elif type == 'Key':
+        elif type == 'key':
             credentials = {'credentialData': [{
                 'name': 'key',
                 'value': token
@@ -59,8 +59,6 @@ class Datasource:
             'useCallerAADIdentity': 'False', # required to avoid direct query connections 'expiring'
             'useEndUserOAuth2Credentials': 'False' # required to avoid direct query connections 'expiring'
         }}
-
-        print(payload)
         
         r = requests.patch(f'https://api.powerbi.com/v1.0/myorg/gateways/{self.gateway_id}/datasources/{self.id}', headers=self.dataset.workspace.tenant.token.get_headers(), json=payload)
         handle_request(r)

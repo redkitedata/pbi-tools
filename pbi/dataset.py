@@ -37,7 +37,7 @@ class Dataset:
     def authenticate(self, credentials):
         """Use the provided credentials to reauthenticate datasources connected to this dataset. If any of the provided credentials do not match the data source they will be skipped.
 
-        Currently, only server and web-based credentials are supported using either username and password or oauth tokens.
+        Currently, only server, databricks and web-based credentials are supported using either username and password, PAT token or oauth tokens.
 
         :param credentials: a dictionary of credentials (see examples in :meth:`~Workspace.refresh_datasets`)
         """
@@ -79,7 +79,7 @@ class Dataset:
                 print(f'*** Updating credentials for {cluster}')
                 cred = credentials.get(cluster)
                 if cluster in credentials:
-                    datasource.update_credentials('Key', token=cred['token'])
+                    datasource.update_credentials('key', token=cred['token'])
                 else:
                     print(f'*** No credentials provided for {cluster}. Using existing credentials.')
 
