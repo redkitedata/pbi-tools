@@ -56,9 +56,9 @@ class Dataset:
                     cred = credentials.get(server)
                     
                     if 'token' in cred:
-                        datasource.update_credentials('oauth2', token=cred['token'])
+                        datasource.update_credentials('Oauth2', token=cred['token'])
                     elif 'username' in cred:
-                        datasource.update_credentials('basic', username=cred['username'], password=cred['password'])
+                        datasource.update_credentials('Basic', username=cred['username'], password=cred['password'])
                 else:
                     print(f'*** No credentials provided for {server}. Using existing credentials.')
             
@@ -69,9 +69,9 @@ class Dataset:
                     cred = credentials.get(domain)
 
                     if 'token' in cred:
-                        datasource.update_credentials('oauth2', token=cred['token'])
+                        datasource.update_credentials('Oauth2', token=cred['token'])
                     elif 'username' in cred:
-                        datasource.update_credentials('basic', username=cred['username'], password=cred['password'])
+                        datasource.update_credentials('Basic', username=cred['username'], password=cred['password'])
                 else:
                     print(f'*** No credentials provided for {domain}. Using existing credentials.')
             

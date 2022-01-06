@@ -31,12 +31,12 @@ class Datasource:
         :param token: valid oauth token (an alternative to passing username and password)
         """
 
-        if type == 'oauth2':
+        if type == 'Oauth2':
             credentials = {'credentialData': [{
                 'name': 'accessToken',
                 'value': token.get_token()
             }]}
-        elif type == 'basic':
+        elif type == 'Basic':
             credentials = {'credentialData': [{
                 'name': 'username',
                 'value': username
