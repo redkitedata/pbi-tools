@@ -56,7 +56,7 @@ class Dataset:
                     cred = credentials.get(server)
                     
                     if 'token' in cred:
-                        datasource.update_credentials('Oauth2', token=cred['token'])
+                        datasource.update_credentials('OAuth2', token=cred['token'])
                     elif 'username' in cred:
                         datasource.update_credentials('Basic', username=cred['username'], password=cred['password'])
                 else:
@@ -69,7 +69,7 @@ class Dataset:
                     cred = credentials.get(domain)
 
                     if 'token' in cred:
-                        datasource.update_credentials('Oauth2', token=cred['token'])
+                        datasource.update_credentials('OAuth2', token=cred['token'])
                     elif 'username' in cred:
                         datasource.update_credentials('Basic', username=cred['username'], password=cred['password'])
                 else:

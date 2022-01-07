@@ -25,13 +25,13 @@ class Datasource:
         
         Warning: If you use the oauth method, then authentiaction will only remain valid until the token expires - you may need to reauthenticate before refreshing; the token may expire before the refresh has completed in large models.
 
-        :param type: the type of authentication method to be used by the PBI service: ouath2, basic or key
+        :param type: the type of authentication method to be used by the PBI service: OAuth2, Basic or Key
         :param username: username value if using SQL authentication; the ``password`` must also be provided
         :param password: password value if using SQL authentication; the ``username`` must also be provided
         :param token: valid oauth token (an alternative to passing username and password)
         """
 
-        if type == 'Oauth2':
+        if type == 'OAuth2':
             credentials = {'credentialData': [{
                 'name': 'accessToken',
                 'value': token.get_token()
