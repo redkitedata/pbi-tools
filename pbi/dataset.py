@@ -48,8 +48,6 @@ class Dataset:
             url = connection.get('url')
             extension = connection.get('extensionDataSourceKind')
 
-            print(connection)
-
             if server: # Server-based connections (e.g. Azure Data Warehouse)
                 if server in credentials:
                     print(f'*** Updating credentials for {server}')
