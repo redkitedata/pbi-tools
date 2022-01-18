@@ -37,7 +37,7 @@ class Dataset:
     def authenticate(self, credentials):
         """Use the provided credentials to reauthenticate datasources connected to this dataset. If any of the provided credentials do not match the data source they will be skipped.
 
-        Currently, only server and web-based credentials are supported using either username and password or oauth tokens.
+        Currently, only server, databricks and web-based credentials are supported using either username and password, PAT token or oauth tokens.
 
         :param credentials: a dictionary of credentials (see examples in :meth:`~Workspace.refresh_datasets`)
         """
@@ -46,6 +46,7 @@ class Dataset:
             connection = json.loads(datasource.connection_details)
             server = connection.get('server')
             url = connection.get('url')
+            extension = connection.get('extensionDataSourceKind')
 
             if server: # Server-based connections (e.g. Azure Data Warehouse)
                 if server in credentials:
@@ -53,9 +54,9 @@ class Dataset:
                     cred = credentials.get(server)
                     
                     if 'token' in cred:
-                        datasource.update_credentials(token=cred['token'])
+                        datasource.update_credentials('OAuth2', token=cred['token'])
                     elif 'username' in cred:
-                        datasource.update_credentials(cred['username'], cred['password'])
+                        datasource.update_credentials('Basic', username=cred['username'], password=cred['password'])
                 else:
                     print(f'*** No credentials provided for {server}. Using existing credentials.')
             
@@ -66,11 +67,21 @@ class Dataset:
                     cred = credentials.get(domain)
 
                     if 'token' in cred:
-                        datasource.update_credentials(token=cred['token'])
+                        datasource.update_credentials('OAuth2', token=cred['token'])
                     elif 'username' in cred:
-                        datasource.update_credentials(cred['username'], cred['password'])
+                        datasource.update_credentials('Basic', username=cred['username'], password=cred['password'])
                 else:
                     print(f'*** No credentials provided for {domain}. Using existing credentials.')
+            
+            elif extension == 'Databricks':
+                extension_path = json.loads(connection['extensionDataSourcePath'])
+                cluster = extension_path.get('httpPath')
+                print(f'*** Updating credentials for {cluster}')
+                cred = credentials.get(cluster)
+                if cluster in credentials:
+                    datasource.update_credentials('Key', token=cred['token'])
+                else:
+                    print(f'*** No credentials provided for {cluster}. Using existing credentials.')
 
             else:
                 print(f'*** No credentials provided for {connection}. Using existing credentials.')
