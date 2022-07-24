@@ -3,7 +3,7 @@ PBI Tools
 
 **PBI Tools** is an object-orientated Python library that makes working with Power BI files easier.
 
-It was designed to support Power BI development and deployment (CICD).
+It was designed to support Power BI development and deployment (CICD) using Azure Service Principals.
 Specifically, it looks to solve two common problems:
 
 1. Storing PBIX files in repos without also storing the data
@@ -27,9 +27,11 @@ First, create a workspace object:
 
 .. code-block:: python
 
-   from pbi import Workspace
+   from pbi.api import Workspace, Tenant
 
-   workspace = Workspace(workspace_id, tenant_id, service_principal, secret)
+   tenant = Tenant(tenant_id, service_principal_id, service_principal_secret)
+
+   workspace = Workspace(tenant, workspace_id)
    print(f'Connected to the {workspace.name} workspace!')
 
 We can do some useful things just using the workspace, for example refresh all datasets:
@@ -83,6 +85,18 @@ There are a few standalone functions that are used by the class methods, but may
 
 .. toctree::
    api/tools
+
+Access and Authenitcation
+-------------------------
+
+The Service Principal requires access to the PowerBI Dashboard at 3 different places:
+
+ * Admin API Access
+ * Non-Admin API Access
+ * User Access
+
+ 
+
 
 Authors
 -------
