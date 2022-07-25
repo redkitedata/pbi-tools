@@ -27,7 +27,7 @@ First, create a workspace object:
 
 .. code-block:: python
 
-   from pbi.api import Workspace, Tenant
+   from api import Workspace, Tenant
 
    tenant = Tenant(tenant_id, service_principal_id, service_principal_secret)
 
