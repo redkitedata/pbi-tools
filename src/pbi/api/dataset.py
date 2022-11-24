@@ -50,6 +50,7 @@ class Dataset:
             connection = json.loads(datasource.connection_details)
             server = connection.get("server")
             url = connection.get("url")
+            extension = connection.get('extensionDataSourceKind')
 
             if server:  # Server-based connections (e.g. Azure Data Warehouse)
                 if server in credentials:
@@ -57,15 +58,11 @@ class Dataset:
                     cred = credentials.get(server)
 
                     if "token" in cred:
-                        datasource.update_credentials(token=cred["token"])
+                        datasource.update_credentials('OAuth2', token=cred['token'])
                     elif "username" in cred:
-                        datasource.update_credentials(
-                            cred["username"], cred["password"]
-                        )
+                        datasource.update_credentials('Basic', username=cred['username'], password=cred['password'])
                 else:
-                    print(
-                        f"*** No credentials provided for {server}. Using existing credentials."
-                    )
+                    print(f"*** No credentials provided for {server}. Using existing credentials.")
 
             elif url:  # Web-based connections (e.g. Application Insights API)
                 domain = urlparse(
@@ -76,20 +73,24 @@ class Dataset:
                     cred = credentials.get(domain)
 
                     if "token" in cred:
-                        datasource.update_credentials(token=cred["token"])
+                        datasource.update_credentials('OAuth2', token=cred['token'])
                     elif "username" in cred:
-                        datasource.update_credentials(
-                            cred["username"], cred["password"]
-                        )
+                        datasource.update_credentials('Basic', username=cred['username'], password=cred['password'])
                 else:
-                    print(
-                        f"*** No credentials provided for {domain}. Using existing credentials."
-                    )
+                    print(f"*** No credentials provided for {domain}. Using existing credentials.")
+
+            elif extension == 'Databricks':
+                extension_path = json.loads(connection['extensionDataSourcePath'])
+                cluster = extension_path.get('httpPath')
+                print(f'*** Updating credentials for {cluster}')
+                cred = credentials.get(cluster)
+                if cluster in credentials:
+                    datasource.update_credentials('Key', token=cred['token'])
+                else:
+                    print(f'*** No credentials provided for {cluster}. Using existing credentials.')
 
             else:
-                print(
-                    f"*** No credentials provided for {connection}. Using existing credentials."
-                )
+                print(f"*** No credentials provided for {connection}. Using existing credentials.")
 
     def trigger_refresh(self):
         """Trigger a refresh of this dataset. This is an async call and you will need to check the refresh status separately using :meth:`~get_refresh_state`
