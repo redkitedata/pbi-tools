@@ -97,7 +97,7 @@ class Dataset:
             commitMode='transactional',
             maxParallelism=10,
             retryCount=0,
-            objects=None,
+            objects={},
             applyRefreshPolicy="true",
             effectiveDate=None
         ):
