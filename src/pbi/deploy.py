@@ -82,7 +82,7 @@ def deploy(
                 report_files,
                 dataset_params,
                 credentials,
-                refresh_config=refresh_config
+                refresh_config=refresh_config,
                 force_refresh=local_force_refresh,
                 on_report_success=on_report_success,
                 name_builder=name_builder,
