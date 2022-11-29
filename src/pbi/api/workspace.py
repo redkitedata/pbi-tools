@@ -431,6 +431,7 @@ class Workspace:
                     dataset.authenticate(credentials)
 
                 print("*** Triggering refresh")  # We check back later for completion
+                print(refresh_config)
                 if "objects" in refresh_config.keys():
                     refresh_config["objects"] = build_refresh_object(refresh_config["objects"])
                 dataset.trigger_refresh(**{k: v for k, v in refresh_config.items() if v is not None})
