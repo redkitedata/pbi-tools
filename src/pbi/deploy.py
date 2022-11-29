@@ -75,8 +75,6 @@ def deploy(
                 ]
                 report_files.extend(new_reports)
 
-            print(refresh_config)
-
             # 3. Deploy
             print(f"* Deploying {len(report_files)} reports from [{dir}]")
             workspace.deploy(
