@@ -83,3 +83,18 @@ def open_branches():
             os.path.abspath(__file__), search_parent_directories=True
         ).remotes.origin.refs
     ]
+
+def build_refresh_object(tables):
+    """Builds the objects array used by the enhanced refresh API
+
+    :param tables: a list of tables to be refreshed
+    :return: an array of tables
+    """
+
+    array = {"objects": []}
+
+    for table in tables:
+        entry = {"table":table}
+        array["objects"].append(entry)
+
+    return array
