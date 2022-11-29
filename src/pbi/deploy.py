@@ -36,7 +36,8 @@ def deploy(
     overwrite_reports=False,
     model_name="Model.pbix",
     name_builder=_name_builder,
-    name_comparator=_name_comparator
+    name_comparator=_name_comparator,
+    **kwargs
 ):
     error = False
     root, dirs, files = next(os.walk(pbi_root))  # Cycle top level folders only
@@ -89,6 +90,7 @@ def deploy(
                 release=release,
                 config_workspace=config_workspace,
                 overwrite_reports=overwrite_reports,
+                **kwargs
             )
 
         except SystemExit as e:
