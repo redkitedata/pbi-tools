@@ -5,7 +5,7 @@ from os import path
 
 from .report import Report
 from .dataset import Dataset
-from pbi.tools import handle_request, rebind_report
+from pbi.tools import handle_request, rebind_report, build_refresh_object
 
 def _name_builder(filepath, **kwargs):
     filename = path.basename(filepath)
@@ -246,7 +246,7 @@ class Workspace:
                 )
                 break
 
-    def refresh_datasets(self, credentials=None, wait=True):
+    def refresh_datasets(self, credentials=None, wait=True, **kwargs):
         """Refreshes all datasets in the workspace, optionally reauthenticating using the credentials provided. Currently, only database credentials are supported using either SQL logins or oauth tokens.
 
         :param credentials: a dictionary of credentials (see examples below)
@@ -289,7 +289,10 @@ class Workspace:
                     print(
                         f"*** Starting refresh..."
                     )  # We check back later for completion
-                    dataset.trigger_refresh()
+                    if "refresh_tables" in kwargs.keys():
+                        object = build_refresh_object(kwargs["refresh_tables"])
+                        kwargs["object"] = object
+                    dataset.trigger_refresh(**{k: v for k, v in kwargs.items() if v is not None})
 
             except SystemExit as e:
                 print(f"!! ERROR. Triggering refresh failed for [{dataset.name}]. {e}")
@@ -428,7 +431,10 @@ class Workspace:
                     dataset.authenticate(credentials)
 
                 print("*** Triggering refresh")  # We check back later for completion
-                dataset.trigger_refresh()
+                if "refresh_tables" in kwargs.keys():
+                    object = build_refresh_object(kwargs["refresh_tables"])
+                    kwargs["object"] = object
+                dataset.trigger_refresh(**{k: v for k, v in kwargs.items() if v is not None})
 
             # 4. Wait for refresh to complete (stop on error)
             refresh_state = dataset.get_refresh_state(
