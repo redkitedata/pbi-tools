@@ -32,33 +32,32 @@ class Datasource:
         """
 
         if type == "OAuth2":
-            credentials = {"credentialData": [{
-                "name": "accessToken",
-                "value": token.get_token()
-            }]}
+            credentials = {
+                "credentialData": [{"name": "accessToken", "value": token.get_token()}]
+            }
         elif type == "Basic":
-            credentials = {"credentialData": [{
-                "name": "username",
-                "value": username
-            }, {
-                "name": "password",
-                "value": password
-            }]}
+            credentials = {
+                "credentialData": [
+                    {"name": "username", "value": username},
+                    {"name": "password", "value": password}
+                ]
+            }
         elif type == "Key":
-            credentials = {"credentialData": [{
-                "name": "key",
-                "value": token
-            }]}
+            credentials = {
+                "credentialData": [{"name": "key", "value": token}]
+            }
 
-        payload = {"credentialDetails": {
-            "credentialType": type,
-            "credentials": json.dumps(credentials),
-            "encryptedConnection": "Encrypted",
-            "encryptionAlgorithm": "None",
-            "privacyLevel": "Organizational",
-            "useCallerAADIdentity": "False", # required to avoid direct query connections 'expiring'
-            "useEndUserOAuth2Credentials": "False" # required to avoid direct query connections 'expiring'
-        }}
+        payload = {
+            "credentialDetails": {
+                "credentialType": type,
+                "credentials": json.dumps(credentials),
+                "encryptedConnection": "Encrypted",
+                "encryptionAlgorithm": "None",
+                "privacyLevel": "Organizational",
+                "useCallerAADIdentity": "False", # required to avoid direct query connections 'expiring'
+                "useEndUserOAuth2Credentials": "False" # required to avoid direct query connections 'expiring'
+            }
+        }
 
         r = requests.patch(
             f"https://api.powerbi.com/v1.0/myorg/gateways/{self.gateway_id}/datasources/{self.id}",
