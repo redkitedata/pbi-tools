@@ -321,7 +321,7 @@ class Workspace:
         report_filepaths,
         dataset_params=None,
         credentials=None,
-        refresh_parameters={},
+        refresh_parameters=None,
         force_refresh=False,
         on_report_success=None,
         name_builder=_name_builder,
@@ -431,6 +431,9 @@ class Workspace:
                     dataset.authenticate(credentials)
 
                 print("*** Triggering refresh")  # We check back later for completion
+
+                if refresh_parameters == None:
+                    refresh_parameters = {}
                 if "objects" in refresh_parameters.keys():
                     refresh_parameters["objects"] = build_refresh_object(refresh_parameters["objects"])
                 dataset.trigger_refresh(**{k: v for k, v in refresh_parameters.items() if v is not None})

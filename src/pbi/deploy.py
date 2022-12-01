@@ -28,7 +28,7 @@ def deploy(
     workspace,
     dataset_params=None,
     credentials=None,
-    refresh_parameters={},
+    refresh_parameters=None,
     force_refresh=None,
     on_report_success=None,
     cherry_picks=None,
