@@ -246,7 +246,7 @@ class Workspace:
                 )
                 break
 
-    def refresh_datasets(self, credentials=None, wait=True, refresh_config={}):
+    def refresh_datasets(self, credentials=None, wait=True, refresh_parameters={}):
         """Refreshes all datasets in the workspace, optionally reauthenticating using the credentials provided. Currently, only database credentials are supported using either SQL logins or oauth tokens.
 
         :param credentials: a dictionary of credentials (see examples below)
@@ -289,9 +289,9 @@ class Workspace:
                     print(
                         f"*** Starting refresh..."
                     )  # We check back later for completion
-                    if "objects" in refresh_config.keys():
-                        refresh_config["objects"] = build_refresh_object(refresh_config["objects"])
-                    dataset.trigger_refresh(**{k: v for k, v in refresh_config.items() if v is not None})
+                    if "objects" in refresh_parameters.keys():
+                        refresh_parameters["objects"] = build_refresh_object(refresh_parameters["objects"])
+                    dataset.trigger_refresh(**{k: v for k, v in refresh_parameters.items() if v is not None})
 
             except SystemExit as e:
                 print(f"!! ERROR. Triggering refresh failed for [{dataset.name}]. {e}")
@@ -321,7 +321,7 @@ class Workspace:
         report_filepaths,
         dataset_params=None,
         credentials=None,
-        refresh_config={},
+        refresh_parameters={},
         force_refresh=False,
         on_report_success=None,
         name_builder=_name_builder,
@@ -431,9 +431,9 @@ class Workspace:
                     dataset.authenticate(credentials)
 
                 print("*** Triggering refresh")  # We check back later for completion
-                if "objects" in refresh_config.keys():
-                    refresh_config["objects"] = build_refresh_object(refresh_config["objects"])
-                dataset.trigger_refresh(**{k: v for k, v in refresh_config.items() if v is not None})
+                if "objects" in refresh_parameters.keys():
+                    refresh_parameters["objects"] = build_refresh_object(refresh_parameters["objects"])
+                dataset.trigger_refresh(**{k: v for k, v in refresh_parameters.items() if v is not None})
 
             # 4. Wait for refresh to complete (stop on error)
             refresh_state = dataset.get_refresh_state(
