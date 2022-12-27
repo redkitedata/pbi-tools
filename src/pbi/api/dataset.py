@@ -116,7 +116,7 @@ class Dataset:
         commitMode="transactional",
         maxParallelism=10,
         retryCount=0,
-        objects={},
+        objects=None,
         applyRefreshPolicy="true",
         effectiveDate=None,
     ):
@@ -146,6 +146,8 @@ class Dataset:
         :param applyRefreshPolicy: determine if the policy is applied or not
         :param effectiveDate: if an incremental refresh policy is applied, the effectiveDate parameter overrides the current date
         """
+        if not objects:
+            objects = {}
 
         payload = {
             "type": type,
