@@ -345,6 +345,7 @@ class Workspace:
         :param report_filepaths: an array of paths to report PBIX files
         :param dataset_params: a dictionary of parameters to be applied to the model
         :param credentials: a dictionary of credentials (see examples in :meth:`~refresh_datasets`)
+        :param refresh_parameters: a dictionary of enhanced refresh parameters
         :param force_refresh: force the model to refresh even if does not meet other criteria
         :param on_report_success: a function that is called after each report is successfully published - passing the report object and ``**kwargs``
         :param name_builder: a function that returns the desired model/report name - passing the report object and ``**kwargs``
