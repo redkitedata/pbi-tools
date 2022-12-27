@@ -188,6 +188,7 @@ class Dataset:
             else:
                 return "No refresh found"
         else:
+            print(r.json())
             refresh = r.json()["value"][0]
             if wait and refresh["status"] == "Unknown":  # still refreshing
                 # print(f'Refreshing [{self.name}], waiting 60 seconds...')
