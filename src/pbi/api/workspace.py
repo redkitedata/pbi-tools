@@ -1,11 +1,13 @@
 import os
 import time
-import requests
 from os import path
 
-from .report import Report
+import requests
+from pbi.tools import build_refresh_object, handle_request, rebind_report
+
 from .dataset import Dataset
-from pbi.tools import handle_request, rebind_report, build_refresh_object
+from .report import Report
+
 
 def _name_builder(filepath, **kwargs):
     filename = path.basename(filepath)
@@ -290,8 +292,12 @@ class Workspace:
                         f"*** Starting refresh..."
                     )  # We check back later for completion
                     if "objects" in refresh_parameters.keys():
-                        refresh_parameters["objects"] = build_refresh_object(refresh_parameters["objects"])
-                    dataset.trigger_refresh(**{k: v for k, v in refresh_parameters.items() if v is not None})
+                        refresh_parameters["objects"] = build_refresh_object(
+                            refresh_parameters["objects"]
+                        )
+                    dataset.trigger_refresh(
+                        **{k: v for k, v in refresh_parameters.items() if v is not None}
+                    )
 
             except SystemExit as e:
                 print(f"!! ERROR. Triggering refresh failed for [{dataset.name}]. {e}")
@@ -327,7 +333,7 @@ class Workspace:
         name_builder=_name_builder,
         name_comparator=_name_comparator,
         overwrite_reports=False,
-        **kwargs
+        **kwargs,
     ):
         """Publishes a single model and an collection of associated reports. Note, currently only database authentication is supported, using either SQL logins or oauth tokens.
 
@@ -385,7 +391,9 @@ class Workspace:
         matching_datasets = [
             d
             for d in self.datasets
-            if name_comparator(d.name, dataset_name, overwrite_reports=overwrite_reports)
+            if name_comparator(
+                d.name, dataset_name, overwrite_reports=overwrite_reports
+            )
         ]  # Look for existing dataset
 
         if (
@@ -435,8 +443,12 @@ class Workspace:
                 if refresh_parameters == None:
                     refresh_parameters = {}
                 if "objects" in refresh_parameters.keys():
-                    refresh_parameters["objects"] = build_refresh_object(refresh_parameters["objects"])
-                dataset.trigger_refresh(**{k: v for k, v in refresh_parameters.items() if v is not None})
+                    refresh_parameters["objects"] = build_refresh_object(
+                        refresh_parameters["objects"]
+                    )
+                dataset.trigger_refresh(
+                    **{k: v for k, v in refresh_parameters.items() if v is not None}
+                )
 
             # 4. Wait for refresh to complete (stop on error)
             refresh_state = dataset.get_refresh_state(
@@ -455,7 +467,9 @@ class Workspace:
             matching_reports = [
                 r
                 for r in self.reports
-                if name_comparator(r.name, report_name, overwrite_reports=overwrite_reports)
+                if name_comparator(
+                    r.name, report_name, overwrite_reports=overwrite_reports
+                )
             ]  # Look for existing reports
             if overwrite_reports:
                 for report in matching_reports:
