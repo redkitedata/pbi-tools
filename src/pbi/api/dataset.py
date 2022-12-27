@@ -188,14 +188,16 @@ class Dataset:
             else:
                 return "No refresh found"
         else:
-            print(r.json())
             refresh = r.json()["value"][0]
             if wait and refresh["status"] == "Unknown":  # still refreshing
                 # print(f'Refreshing [{self.name}], waiting 60 seconds...')
                 time.sleep(60)
                 return self.get_refresh_state(wait)
             elif refresh["status"] == "Failed":
-                return refresh["serviceExceptionJson"]
+                if "serviceExceptionJson" in refresh:
+                    return refresh["serviceExceptionJson"]
+                # Cancelled refreshes are presented with failed status and no exception details.
+                return "Cancelled"
             else:
                 return refresh["status"]
 
