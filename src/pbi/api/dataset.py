@@ -197,7 +197,7 @@ class Dataset:
                 if "serviceExceptionJson" in refresh:
                     return refresh["serviceExceptionJson"]
                 # Cancelled refreshes are presented with failed status and no exception details.
-                return "Cancelled"
+                return "Unknown"
             else:
                 return refresh["status"]
 
