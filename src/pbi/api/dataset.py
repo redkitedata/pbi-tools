@@ -111,15 +111,15 @@ class Dataset:
                 )
 
     def trigger_refresh(
-            self,
-            type='automatic',
-            commitMode='transactional',
-            maxParallelism=10,
-            retryCount=0,
-            objects={},
-            applyRefreshPolicy="true",
-            effectiveDate=None
-        ):
+        self,
+        type="automatic",
+        commitMode="transactional",
+        maxParallelism=10,
+        retryCount=0,
+        objects={},
+        applyRefreshPolicy="true",
+        effectiveDate=None,
+    ):
         """Trigger a refresh of this dataset. This is an async call and you will need to check the refresh status separately using :meth:`~get_refresh_state`
 
         :param credentials: a dictionary of credentials (see examples in :meth:`~Workspace.refresh_datasets`)
@@ -153,7 +153,7 @@ class Dataset:
             "maxParallelism": maxParallelism,
             "retryCount": retryCount,
             "applyRefreshPolicy": applyRefreshPolicy,
-            "effectiveDate":effectiveDate
+            "effectiveDate": effectiveDate,
         }
 
         payload.update(objects)
@@ -161,7 +161,7 @@ class Dataset:
         r = requests.post(
             f"https://api.powerbi.com/v1.0/myorg/groups/{self.workspace.id}/datasets/{self.id}/refreshes",
             headers=self.workspace.tenant.token.get_headers(),
-            json=payload
+            json=payload,
         )
         handle_request(r)
 
