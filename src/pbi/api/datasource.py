@@ -1,4 +1,5 @@
 import json
+
 import requests
 from pbi.tools import handle_request
 
@@ -39,13 +40,11 @@ class Datasource:
             credentials = {
                 "credentialData": [
                     {"name": "username", "value": username},
-                    {"name": "password", "value": password}
+                    {"name": "password", "value": password},
                 ]
             }
         elif type == "Key":
-            credentials = {
-                "credentialData": [{"name": "key", "value": token}]
-            }
+            credentials = {"credentialData": [{"name": "key", "value": token}]}
 
         payload = {
             "credentialDetails": {
@@ -54,8 +53,8 @@ class Datasource:
                 "encryptedConnection": "Encrypted",
                 "encryptionAlgorithm": "None",
                 "privacyLevel": "Organizational",
-                "useCallerAADIdentity": "False", # required to avoid direct query connections 'expiring'
-                "useEndUserOAuth2Credentials": "False" # required to avoid direct query connections 'expiring'
+                "useCallerAADIdentity": "False",  # required to avoid direct query connections 'expiring'
+                "useEndUserOAuth2Credentials": "False",  # required to avoid direct query connections 'expiring'
             }
         }
 

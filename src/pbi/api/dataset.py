@@ -1,8 +1,10 @@
-import time
 import json
-import requests
+import time
 from urllib.parse import urlparse
+
+import requests
 from pbi.tools import handle_request
+
 from .datasource import Datasource
 
 
@@ -60,9 +62,15 @@ class Dataset:
                     if "token" in cred:
                         datasource.update_credentials("OAuth2", token=cred["token"])
                     elif "username" in cred:
-                        datasource.update_credentials("Basic", username=cred["username"], password=cred["password"])
+                        datasource.update_credentials(
+                            "Basic",
+                            username=cred["username"],
+                            password=cred["password"],
+                        )
                 else:
-                    print(f"*** No credentials provided for {server}. Using existing credentials.")
+                    print(
+                        f"*** No credentials provided for {server}. Using existing credentials."
+                    )
 
             elif url:  # Web-based connections (e.g. Application Insights API)
                 domain = urlparse(
@@ -75,9 +83,15 @@ class Dataset:
                     if "token" in cred:
                         datasource.update_credentials("OAuth2", token=cred["token"])
                     elif "username" in cred:
-                        datasource.update_credentials("Basic", username=cred["username"], password=cred["password"])
+                        datasource.update_credentials(
+                            "Basic",
+                            username=cred["username"],
+                            password=cred["password"],
+                        )
                 else:
-                    print(f"*** No credentials provided for {domain}. Using existing credentials.")
+                    print(
+                        f"*** No credentials provided for {domain}. Using existing credentials."
+                    )
 
             elif extension == "Databricks":
                 extension_path = json.loads(connection["extensionDataSourcePath"])
@@ -87,10 +101,14 @@ class Dataset:
                 if cluster in credentials:
                     datasource.update_credentials("Key", token=cred["token"])
                 else:
-                    print(f"*** No credentials provided for {cluster}. Using existing credentials.")
+                    print(
+                        f"*** No credentials provided for {cluster}. Using existing credentials."
+                    )
 
             else:
-                print(f"*** No credentials provided for {connection}. Using existing credentials.")
+                print(
+                    f"*** No credentials provided for {connection}. Using existing credentials."
+                )
 
     def trigger_refresh(self):
         """Trigger a refresh of this dataset. This is an async call and you will need to check the refresh status separately using :meth:`~get_refresh_state`
