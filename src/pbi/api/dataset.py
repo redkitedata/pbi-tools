@@ -194,10 +194,7 @@ class Dataset:
                 time.sleep(60)
                 return self.get_refresh_state(wait)
             elif refresh["status"] == "Failed":
-                if "serviceExceptionJson" in refresh:
-                    return refresh["serviceExceptionJson"]
-                # Cancelled refreshes are presented with failed status and no exception details.
-                return "Cancelled"
+                return refresh.get("serviceExceptionJson", "Unspecified Error")
             else:
                 return refresh["status"]
 
