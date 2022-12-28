@@ -112,7 +112,7 @@ class Dataset:
 
     def trigger_refresh(
         self,
-        type="automatic",
+        type="full",
         commitMode="transactional",
         maxParallelism=10,
         retryCount=0,
