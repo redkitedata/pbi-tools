@@ -75,6 +75,7 @@ class Dataset:
 
             elif url:  # Web-based connections (e.g. Application Insights API)
                 datasource.get_credentials()
+                print(datasource.auth_type)
                 domain = urlparse(
                     url
                 ).netloc  # Extract (sub)domain from full url endpoint
