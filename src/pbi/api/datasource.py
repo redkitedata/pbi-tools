@@ -20,6 +20,17 @@ class Datasource:
         self.id = datasource["id"]
         self.gateway_id = datasource["gatewayId"]
         self.connection_details = datasource["connectionDetails"]
+        self.auth_type = None
+
+    def get_credentials(self):
+        """Return the authentication method used by the datasource, e.g. Anonymous, Basic, Key, etc."""
+        r = requests.get(
+            f"https://api.powerbi.com/v1.0/myorg/gateways/{self.gateway_id}/datasources/{self.id}",
+            headers=self.dataset.workspace.tenant.token.get_headers(),
+        )
+        response = handle_request(r)
+        self.auth_type = response.get("credentialType")
+        return self.auth_type
 
     def update_credentials(self, auth_type, username=None, password=None, token=None):
         """Use the provided credentials to reauthenticate datasources connected to this dataset. If any of the provided credentials do not match the data source they will be skipped.
@@ -46,6 +57,9 @@ class Datasource:
             }
         elif auth_type == "Key":
             credentials = {"credentialData": [{"name": "key", "value": token}]}
+
+        elif auth_type == "Anonymous":
+            credentials = {"credentialData": ""}
 
         payload = {
             "credentialDetails": {

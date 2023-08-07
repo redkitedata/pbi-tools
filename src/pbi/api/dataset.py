@@ -74,6 +74,7 @@ class Dataset:
                     )
 
             elif url:  # Web-based connections (e.g. Application Insights API)
+                datasource.get_credentials()
                 domain = urlparse(
                     url
                 ).netloc  # Extract (sub)domain from full url endpoint
@@ -89,6 +90,9 @@ class Dataset:
                             username=cred["username"],
                             password=cred["password"],
                         )
+                elif datasource.auth_type == "Anonymous":
+                    datasource.update_credentials("Anonymous")
+
                 else:
                     print(
                         f"*** No credentials provided for {domain}. Using existing credentials."
