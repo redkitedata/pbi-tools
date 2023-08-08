@@ -47,6 +47,9 @@ class Datasource:
         elif auth_type == "Key":
             credentials = {"credentialData": [{"name": "key", "value": token}]}
 
+        elif auth_type == "Anonymous":
+            credentials = {"credentialData": ""}
+
         payload = {
             "credentialDetails": {
                 "credentialType": auth_type,

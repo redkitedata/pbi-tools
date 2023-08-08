@@ -89,6 +89,9 @@ class Dataset:
                             username=cred["username"],
                             password=cred["password"],
                         )
+                    elif "anonymous" in cred:
+                        datasource.update_credentials("Anonymous")
+
                 else:
                     print(
                         f"*** No credentials provided for {domain}. Using existing credentials."
