@@ -3,6 +3,7 @@ import time
 from urllib.parse import urlparse
 
 import requests
+
 from pbi.tools import handle_request
 
 from .datasource import Datasource
@@ -88,6 +89,9 @@ class Dataset:
                             username=cred["username"],
                             password=cred["password"],
                         )
+                    elif "anonymous" in cred:
+                        datasource.update_credentials("Anonymous")
+
                 else:
                     print(
                         f"*** No credentials provided for {domain}. Using existing credentials."

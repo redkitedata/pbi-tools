@@ -1,6 +1,7 @@
 import json
 
 import requests
+
 from pbi.tools import handle_request
 
 
@@ -20,7 +21,7 @@ class Datasource:
         self.gateway_id = datasource["gatewayId"]
         self.connection_details = datasource["connectionDetails"]
 
-    def update_credentials(self, type, username=None, password=None, token=None):
+    def update_credentials(self, auth_type, username=None, password=None, token=None):
         """Use the provided credentials to reauthenticate datasources connected to this dataset. If any of the provided credentials do not match the data source they will be skipped.
 
         Currently, either database (using either SQL logins or oauth tokens) or databricks (using PAT tokens) credentials are supported.
@@ -32,23 +33,26 @@ class Datasource:
         :param token: valid oauth token (an alternative to passing username and password)
         """
 
-        if type == "OAuth2":
+        if auth_type == "OAuth2":
             credentials = {
                 "credentialData": [{"name": "accessToken", "value": token.get_token()}]
             }
-        elif type == "Basic":
+        elif auth_type == "Basic":
             credentials = {
                 "credentialData": [
                     {"name": "username", "value": username},
                     {"name": "password", "value": password},
                 ]
             }
-        elif type == "Key":
+        elif auth_type == "Key":
             credentials = {"credentialData": [{"name": "key", "value": token}]}
+
+        elif auth_type == "Anonymous":
+            credentials = {"credentialData": ""}
 
         payload = {
             "credentialDetails": {
-                "credentialType": type,
+                "credentialType": auth_type,
                 "credentials": json.dumps(credentials),
                 "encryptedConnection": "Encrypted",
                 "encryptionAlgorithm": "None",
