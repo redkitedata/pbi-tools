@@ -295,7 +295,7 @@ class Workspace:
                     print(
                         f"*** Starting refresh..."
                     )  # We check back later for completion
-                    if "objects" in refresh_parameters.keys():
+                    if "objects" in refresh_parameters:
                         refresh_parameters["objects"] = build_refresh_object(
                             refresh_parameters["objects"]
                         )
@@ -447,7 +447,7 @@ class Workspace:
 
                 if refresh_parameters == None:
                     refresh_parameters = {}
-                if "objects" in refresh_parameters.keys():
+                if "objects" in refresh_parameters:
                     refresh_parameters["objects"] = build_refresh_object(
                         refresh_parameters["objects"]
                     )
