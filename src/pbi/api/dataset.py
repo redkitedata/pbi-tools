@@ -198,7 +198,7 @@ class Dataset:
                 time.sleep(60)
                 return self.get_refresh_state(wait)
             elif refresh["status"] == "Failed":
-                return refresh.get("serviceExceptionJson", "Unspecified Error")
+                return refresh["serviceExceptionJson"]
             else:
                 return refresh["status"]
 
