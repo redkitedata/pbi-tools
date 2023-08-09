@@ -3,6 +3,7 @@ import time
 from os import path
 
 import requests
+
 from pbi.tools import build_refresh_object, handle_request, rebind_report
 
 from .dataset import Dataset
@@ -248,7 +249,7 @@ class Workspace:
                 )
                 break
 
-    def refresh_datasets(self, credentials=None, wait=True, refresh_parameters={}):
+    def refresh_datasets(self, credentials=None, wait=True, refresh_parameters=None):
         """Refreshes all datasets in the workspace, optionally reauthenticating using the credentials provided. Currently, only database credentials are supported using either SQL logins or oauth tokens.
 
         :param credentials: a dictionary of credentials (see examples below)
@@ -268,6 +269,9 @@ class Workspace:
             >>> result
             True
         """
+
+        if refresh_parameters is None:
+            refresh_parameters = {}
 
         error = False
         datasets = [d for d in self.datasets if "Deployment Aid" not in d.name]
