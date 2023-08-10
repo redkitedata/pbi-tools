@@ -150,19 +150,16 @@ class Dataset:
         :param applyRefreshPolicy: determine if the policy is applied or not
         :param effectiveDate: if an incremental refresh policy is applied, the effectiveDate parameter overrides the current date
         """
-        if not objects:
-            objects = {}
 
         payload = {
             "type": type,
             "commitMode": commitMode,
             "maxParallelism": maxParallelism,
             "retryCount": retryCount,
+            "objects": objects,
             "applyRefreshPolicy": applyRefreshPolicy,
             "effectiveDate": effectiveDate,
         }
-
-        payload.update(objects)
 
         r = requests.post(
             f"https://api.powerbi.com/v1.0/myorg/groups/{self.workspace.id}/datasets/{self.id}/refreshes",
