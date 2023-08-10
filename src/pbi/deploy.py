@@ -84,8 +84,8 @@ def deploy(
             workspace.deploy(
                 dataset_file,
                 report_files,
-                dataset_params,
-                credentials,
+                dataset_params=dataset_params,
+                credentials=credentials,
                 refresh_parameters=refresh_parameters,
                 force_refresh=local_force_refresh,
                 on_report_success=on_report_success,
