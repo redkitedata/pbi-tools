@@ -1,11 +1,14 @@
 import os
 import time
-import requests
 from os import path
 
-from .report import Report
-from .dataset import Dataset
+import requests
+
 from pbi.tools import handle_request, rebind_report
+
+from .dataset import Dataset
+from .report import Report
+
 
 def _name_builder(filepath, **kwargs):
     filename = path.basename(filepath)
@@ -246,10 +249,11 @@ class Workspace:
                 )
                 break
 
-    def refresh_datasets(self, credentials=None, wait=True):
+    def refresh_datasets(self, credentials=None, refresh_parameters=None, wait=True):
         """Refreshes all datasets in the workspace, optionally reauthenticating using the credentials provided. Currently, only database credentials are supported using either SQL logins or oauth tokens.
 
         :param credentials: a dictionary of credentials (see examples below)
+        :param refresh_parameters: a dictionary of enhanced refresh parameters as per the Power BI Enhanced Refresh REST API documentation
         :param wait: whether to wait for all models to finish refreshing before returning
         :return: a `Boolean` indicating whether all models refreshed successfully (if waiting)
 
@@ -266,6 +270,9 @@ class Workspace:
             >>> result
             True
         """
+
+        if refresh_parameters is None:
+            refresh_parameters = {}
 
         error = False
         datasets = [d for d in self.datasets if "Deployment Aid" not in d.name]
@@ -289,7 +296,9 @@ class Workspace:
                     print(
                         f"*** Starting refresh..."
                     )  # We check back later for completion
-                    dataset.trigger_refresh()
+                    dataset.trigger_refresh(
+                        **{k: v for k, v in refresh_parameters.items() if v is not None}
+                    )
 
             except SystemExit as e:
                 print(f"!! ERROR. Triggering refresh failed for [{dataset.name}]. {e}")
@@ -319,6 +328,7 @@ class Workspace:
         report_filepaths,
         dataset_params=None,
         credentials=None,
+        refresh_parameters=None,
         force_refresh=False,
         on_report_success=None,
         name_builder=_name_builder,
@@ -336,6 +346,7 @@ class Workspace:
         :param report_filepaths: an array of paths to report PBIX files
         :param dataset_params: a dictionary of parameters to be applied to the model
         :param credentials: a dictionary of credentials (see examples in :meth:`~refresh_datasets`)
+        :param refresh_parameters: a dictionary of enhanced refresh parameters as per the Power BI Enhanced Refresh REST API documentation
         :param force_refresh: force the model to refresh even if does not meet other criteria
         :param on_report_success: a function that is called after each report is successfully published - passing the report object and ``**kwargs``
         :param name_builder: a function that returns the desired model/report name - passing the report object and ``**kwargs``
@@ -373,6 +384,9 @@ class Workspace:
                 print(f'Report deployed! {report.name}')
         """
 
+        if refresh_parameters is None:
+            refresh_parameters = {}
+
         # 1. Get dummy connections string from 'aid report' in config workspace
         aid_model, aid_report = self.tenant.get_deployment_aids()
         connection_string = self.tenant.get_aid_connection_string()
@@ -382,7 +396,9 @@ class Workspace:
         matching_datasets = [
             d
             for d in self.datasets
-            if name_comparator(d.name, dataset_name, overwrite_reports=overwrite_reports)
+            if name_comparator(
+                d.name, dataset_name, overwrite_reports=overwrite_reports
+            )
         ]  # Look for existing dataset
 
         if (
@@ -428,7 +444,10 @@ class Workspace:
                     dataset.authenticate(credentials)
 
                 print("*** Triggering refresh")  # We check back later for completion
-                dataset.trigger_refresh()
+
+                dataset.trigger_refresh(
+                    **{k: v for k, v in refresh_parameters.items() if v is not None}
+                )
 
             # 4. Wait for refresh to complete (stop on error)
             refresh_state = dataset.get_refresh_state(
@@ -447,7 +466,9 @@ class Workspace:
             matching_reports = [
                 r
                 for r in self.reports
-                if name_comparator(r.name, report_name, overwrite_reports=overwrite_reports)
+                if name_comparator(
+                    r.name, report_name, overwrite_reports=overwrite_reports
+                )
             ]  # Look for existing reports
             if overwrite_reports:
                 for report in matching_reports:

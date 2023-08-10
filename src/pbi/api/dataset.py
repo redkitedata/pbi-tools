@@ -114,15 +114,57 @@ class Dataset:
                     f"*** No credentials provided for {connection}. Using existing credentials."
                 )
 
-    def trigger_refresh(self):
+    def trigger_refresh(
+        self,
+        type="full",
+        commitMode="transactional",
+        maxParallelism=10,
+        retryCount=0,
+        objects=None,
+        applyRefreshPolicy="true",
+        effectiveDate=None,
+    ):
         """Trigger a refresh of this dataset. This is an async call and you will need to check the refresh status separately using :meth:`~get_refresh_state`
 
         :param credentials: a dictionary of credentials (see examples in :meth:`~Workspace.refresh_datasets`)
+        :param type: the type of processing to perform
+        :param commitMode: determines if objects will be committed in batches or only when complete
+        :param maxParallelism: the maximum number of threads on which to run parallel processing commands
+        :param retryCount: the number of times the operation will retry before failing
+        :param objects: an array of tables and partions to be refreshed
+
+        .. code-block:: json
+
+        >>> {
+        >>>     "objects": [
+        >>>         {
+        >>>             "table": "DimCustomer",
+        >>>             "partition": "DimCustomer"
+        >>>         },
+        >>>         {
+        >>>             "table": "DimDate"
+        >>>         }
+        >>>     ]
+        >>> }
+
+        :param applyRefreshPolicy: determine if the policy is applied or not
+        :param effectiveDate: if an incremental refresh policy is applied, the effectiveDate parameter overrides the current date
         """
+
+        payload = {
+            "type": type,
+            "commitMode": commitMode,
+            "maxParallelism": maxParallelism,
+            "retryCount": retryCount,
+            "objects": objects,
+            "applyRefreshPolicy": applyRefreshPolicy,
+            "effectiveDate": effectiveDate,
+        }
 
         r = requests.post(
             f"https://api.powerbi.com/v1.0/myorg/groups/{self.workspace.id}/datasets/{self.id}/refreshes",
             headers=self.workspace.tenant.token.get_headers(),
+            json=payload,
         )
         handle_request(r)
 
