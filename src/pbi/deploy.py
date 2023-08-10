@@ -1,7 +1,9 @@
 import os
+
 from .tools import check_file_modified
 
 DELIMITER = " -- "
+
 
 def _name_builder(filepath, **kwargs):  # "(branch) -- group -- file -- release"
     filename = os.path.basename(filepath)
@@ -14,6 +16,7 @@ def _name_builder(filepath, **kwargs):  # "(branch) -- group -- file -- release"
         list(filter(None, components))
     )  # Concatenate components using delimiter, ignoring any empty components
 
+
 def _name_comparator(a, b, overwrite_reports=False):
     if overwrite_reports:
         return a == b  # If overwriting reports the names will share the same structure
@@ -22,6 +25,7 @@ def _name_comparator(a, b, overwrite_reports=False):
     return (
         a_components[:-1] == b_components[:-1]
     )  # Compare all except final component (which is the release)
+
 
 def deploy(
     pbi_root,
@@ -37,7 +41,7 @@ def deploy(
     overwrite_reports=False,
     model_name="Model.pbix",
     name_builder=_name_builder,
-    name_comparator=_name_comparator
+    name_comparator=_name_comparator,
 ):
     error = False
     root, dirs, files = next(os.walk(pbi_root))  # Cycle top level folders only
@@ -90,7 +94,7 @@ def deploy(
                 group=dir,
                 release=release,
                 config_workspace=config_workspace,
-                overwrite_reports=overwrite_reports
+                overwrite_reports=overwrite_reports,
             )
 
         except SystemExit as e:
