@@ -295,10 +295,6 @@ class Workspace:
                     print(
                         f"*** Starting refresh..."
                     )  # We check back later for completion
-                    if "objects" in refresh_parameters:
-                        refresh_parameters["objects"] = build_refresh_object(
-                            refresh_parameters["objects"]
-                        )
                     dataset.trigger_refresh(
                         **{k: v for k, v in refresh_parameters.items() if v is not None}
                     )
@@ -387,6 +383,9 @@ class Workspace:
                 print(f'Report deployed! {report.name}')
         """
 
+        if refresh_parameters is None:
+            refresh_parameters = {}
+
         # 1. Get dummy connections string from 'aid report' in config workspace
         aid_model, aid_report = self.tenant.get_deployment_aids()
         connection_string = self.tenant.get_aid_connection_string()
@@ -445,12 +444,6 @@ class Workspace:
 
                 print("*** Triggering refresh")  # We check back later for completion
 
-                if refresh_parameters == None:
-                    refresh_parameters = {}
-                if "objects" in refresh_parameters:
-                    refresh_parameters["objects"] = build_refresh_object(
-                        refresh_parameters["objects"]
-                    )
                 dataset.trigger_refresh(
                     **{k: v for k, v in refresh_parameters.items() if v is not None}
                 )
