@@ -249,7 +249,7 @@ class Workspace:
                 )
                 break
 
-    def refresh_datasets(self, credentials=None, wait=True, refresh_parameters=None):
+    def refresh_datasets(self, credentials=None, refresh_parameters=None, wait=True):
         """Refreshes all datasets in the workspace, optionally reauthenticating using the credentials provided. Currently, only database credentials are supported using either SQL logins or oauth tokens.
 
         :param credentials: a dictionary of credentials (see examples below)
