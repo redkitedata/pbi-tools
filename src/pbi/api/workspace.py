@@ -4,7 +4,7 @@ from os import path
 
 import requests
 
-from pbi.tools import build_refresh_object, handle_request, rebind_report
+from pbi.tools import handle_request, rebind_report
 
 from .dataset import Dataset
 from .report import Report
