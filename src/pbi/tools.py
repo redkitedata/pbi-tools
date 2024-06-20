@@ -16,7 +16,12 @@ def handle_request(r, allowed_codes=None):
         else:
             raise SystemExit(f"ERROR {message}")
 
-    return r.json() if r.content else None
+    rjson = r.json().get("value")
+    if(rjson):
+        return r.json() if r.content else None
+    else:
+        error_message = "Service principal can authenticate, but cannot access the workspace. Check it has access under 'Workspace Access' "
+        raise SystemExit(f"ERROR {error_message}")
 
 
 def rebind_report(filepath, connection_string):
